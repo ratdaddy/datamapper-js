@@ -29,7 +29,7 @@ Steps.When /^save the ojbect$/, (ctx) ->
 
 Steps.Then /^I can read the object back from the database$/, (ctx) ->
 	db = DataMapper.db
-	db.collection 'test_coll', (err, collection) ->
+	db.collection 'test_items', (err, collection) ->
 		collection.find().toArray (err, results) ->
 			results.length.should.equal 1
 			results[0].testAttr1.should.equal 'test value 1'

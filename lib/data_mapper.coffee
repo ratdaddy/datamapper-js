@@ -1,5 +1,6 @@
 mongodb = require 'mongodb'
 _ = require 'underscore'
+inflect = require 'inflect'
 
 class DataMapper
 	@setup: (options, cb) ->
@@ -24,7 +25,8 @@ class DataMapper.Model
 			@_resource.properties
 
 	save: (cb) ->
-		DataMapper.db.collection 'test_coll', (err, collection) =>
+		collName = DataMapper.Inflector.tableize @_resource.name
+		DataMapper.db.collection collName, (err, collection) =>
 			saveObj = {}
 			_.each @properties, (property) =>
 				saveObj[property] = @[property] if @[property]?
@@ -32,14 +34,17 @@ class DataMapper.Model
 			collection.insert saveObj, cb
 
 class DataMapper.Resource
-	@properties: []
-
 	@property: (name) ->
+		@properties = [] unless @properties?
 		@properties.push name
 
 	@new: ->
 		model = new DataMapper.Model
 		model._resource = @
 		model
+
+class DataMapper.Inflector
+	@tableize: (className) ->
+		inflect.underscore inflect.pluralize(className)
 
 global.DataMapper = DataMapper
