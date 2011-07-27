@@ -4,20 +4,19 @@ inflect = require 'inflect'
 
 class DataMapper
 	@setup: (options, cb) ->
-		if typeof options ==  'function'
-			cb = options
-			hostname = 'localhost'
-			port = mongodb.Connection.DEFAULT_PORT
-		else
+		if options.database?
 			hostname = options.hostname || 'localhost'
 			port = options.port || mongodb.Connection.DEFAULT_PORT
+			database = options.database
 
-		@_initDB hostname, port
-		@db.open cb
+			@_initDB hostname, port, database
+			@db.open cb
+		else
+			cb new Error('Must specify a database name to setup')
 
-	@_initDB: (hostname, port) ->
+	@_initDB: (hostname, port, database) ->
 		server = new mongodb.Server hostname, port, {}
-		@db = new mongodb.Db 'test', server
+		@db = new mongodb.Db database, server
 
 class DataMapper.Model
 	constructor: ->

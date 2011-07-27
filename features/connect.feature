@@ -13,7 +13,12 @@ Feature: Connect
 		When I create a connection giving an invalid hostname
 		Then I get a connection error
 
-	Scenario: Specified hostname and an error
+	Scenario: Specified port and an error
 		Given a running mongo daemon
 		When I create a connection giving an invalid port number
+		Then I get a connection error
+
+	Scenario: No database name specified
+		Given a running mongo daemon
+		When I create a connection with no database name
 		Then I get a connection error

@@ -6,7 +6,7 @@ TestItem = null
 testObject = null
 
 Steps.Given /^the data mapper is setup$/, (ctx) ->
-	DataMapper.setup ->
+	DataMapper.setup { database: 'test' }, ->
 		DataMapper.db.dropDatabase ctx.done
 
 Steps.Given /a defined model$/, (ctx) ->
