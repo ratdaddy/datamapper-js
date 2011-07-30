@@ -2,18 +2,7 @@ Steps = require('cucumis').Steps
 
 require 'data_mapper'
 
-TestItem = null
 testObject = null
-
-Steps.Given /^the data mapper is setup$/, (ctx) ->
-	DataMapper.setup { database: 'test' }, ->
-		DataMapper.db.dropDatabase ctx.done
-
-Steps.Given /a defined model$/, (ctx) ->
-	class TestItem extends DataMapper.Resource
-		@property 'testAttr1'
-
-	ctx.done()
 
 Steps.When /^I create an object$/, (ctx) ->
 	testObject = TestItem.new()

@@ -1,5 +1,4 @@
 mongodb = require 'mongodb'
-_ = require 'underscore'
 inflect = require 'inflect'
 
 class DataMapper
@@ -27,7 +26,7 @@ class DataMapper.Model
 		collName = DataMapper.Inflector.tableize @_resource.name
 		DataMapper.db.collection collName, (err, collection) =>
 			saveObj = {}
-			_.each @properties, (property) =>
+			for property in @properties
 				saveObj[property] = @[property] if @[property]?
 
 			collection.insert saveObj, cb
@@ -41,6 +40,12 @@ class DataMapper.Resource
 		model = new DataMapper.Model
 		model._resource = @
 		model
+
+	@all: (cb) ->
+		collName = DataMapper.Inflector.tableize @name
+		DataMapper.db.collection collName, (err, collection) ->
+			collection.find (err, cursor) ->
+				cursor.toArray cb
 
 class DataMapper.Inflector
 	@tableize: (className) ->

@@ -28,10 +28,11 @@ describe 'DataMapper.Model', ->
 	describe '#save', ->
 		beforeEach ->
 			@model.testProperty = 'test value'
+			@model.undefinedProperty = 'test value'
 
 			@cb = ->
 
-			spyOn(DataMapper.Inflector, 'tableize').andReturn 'test_coll'
+			spyOn(DataMapper.Inflector, 'tableize').andCallThrough()
 
 			@collObj =
 				insert: ->
@@ -48,7 +49,7 @@ describe 'DataMapper.Model', ->
 			expect(DataMapper.Inflector.tableize).toHaveBeenCalledWith 'TestModel'
 
 		it 'calls db.collection with the name of the collection', ->
-			@collection.argsForCall[0][0].should.equal 'test_coll'
+			@collection.argsForCall[0][0].should.equal 'test_models'
 
-		it 'calls collection.insert', ->
+		it 'calls collection.insert with only the properties defined for the model', ->
 			expect(@collObj.insert).toHaveBeenCalledWith { testProperty: 'test value' }, @cb
