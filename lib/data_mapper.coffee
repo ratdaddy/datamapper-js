@@ -41,11 +41,16 @@ class DataMapper.Resource
 		model._resource = @
 		model
 
-	@all: (cb) ->
+	@all: (query, cb) ->
 		collName = DataMapper.Inflector.tableize @name
 		DataMapper.db.collection collName, (err, collection) ->
-			collection.find (err, cursor) ->
+			toArray = (err, cursor) ->
 				cursor.toArray cb
+			if typeof query == 'function'
+				cb = query
+				collection.find  toArray
+			else
+				collection.find query, toArray
 
 class DataMapper.Inflector
 	@tableize: (className) ->

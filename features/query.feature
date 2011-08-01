@@ -9,3 +9,10 @@ Feature: Basic query
 		And a defined model
 		When I do an all query with no parameters
 		Then I get a collection with all the documents in the database
+
+	Scenario: Find a subset of records
+		Given the data mapper is setup
+		And there are several documents in the database
+		And a defined model
+		When I do an all query with a key-value pair
+		Then I get a collection with only the specified documents
